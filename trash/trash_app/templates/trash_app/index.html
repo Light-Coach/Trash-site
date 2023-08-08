@@ -1,0 +1,88 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+<p>
+	<center>Добро пожаловать,
+		{% if user.is_authenticated %}
+		{{ request.user.username }}.
+		{% else %}
+		странник.{% endif %}
+	</center>
+</p>
+
+<figure class="highcharts-figure">
+	<div id="container"></div>
+</figure>
+
+<script>Highcharts.chart('container', {
+
+		title: {
+			text: 'Масса отходов',
+			align: 'left'
+		},
+
+		subtitle: {
+			text: '',
+			align: 'left'
+		},
+
+		yAxis: {
+			title: {
+				text: 'Количество тысяч тонн мусора'
+			}
+		},
+
+		xAxis: {
+			title: {
+				text: 'Года'
+			},
+			accessibility: {
+				rangeDescription: 'Range: 2010 to 2020'
+			}
+		},
+
+		legend: {
+			layout: 'vertical',
+			align: 'left',
+			verticalAlign: 'middle'
+		},
+
+		plotOptions: {
+			series: {
+				label: {
+					connectorAllowed: false
+				},
+				pointStart: 2013
+			}
+		},
+
+		series: [{
+			name: 'Масса переработанных отходов',
+			data: [24916, 25941, 26742, 28851, 30490, 31282,
+				35121, 36885, 38726, 40243, 49050]
+		}, {
+			name: 'Масса отходов',
+			data: [78971, 69152, 65165, 81827, 94143, 97876,
+				105073, 110876, 115157, 117454, 119610]
+		},],
+
+		responsive: {
+			rules: [{
+				condition: {
+					maxWidth: 500
+				},
+				chartOptions: {
+					legend: {
+						layout: 'horizontal',
+						align: 'center',
+						verticalAlign: 'bottom'
+					}
+				}
+			}]
+		}
+
+	});
+</script>
+
+{% endblock %}

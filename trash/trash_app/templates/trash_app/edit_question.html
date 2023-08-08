@@ -1,0 +1,94 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+{% if success_message_of_update %}
+<h1>
+	<div class="text-bg-info p-3"><center>Вопрос обновлён.</center></div>
+</h1>
+{% endif %}
+
+<table class="table table-bordered">
+	<thead>
+		<tr class="table-active">
+			<th scope="col">Редактирование // удаление вопроса {{ question.title }}</th>
+			<th scope="col">Дата создания</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{ question.content }}</td>
+			<td>{{ question.date_created }}</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#deleteQuestion"
+	style="float: right;">
+	Удалить
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteQuestion" tabindex="-1" aria-labelledby="deleteQuestionLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteQuestionLabel">Удаляем?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+				<a href="{% url 'delete_question' question.slug question.id %}" role="button"
+					class="btn btn-dark">Удалить</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editQuestion"
+	style="float: right; position: relative; right: 5px;">
+	Редактировать
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editQuestion" tabindex="-1" aria-labelledby="editQuestionLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="editQuestionLabel">Редактирование</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="edit_question" method="post">
+					{% csrf_token %}
+
+					{{ form.as_p }}
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+				<button form="edit_question" type="submit" class="btn btn-success">Сохранить изменения</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="left-button">
+	<a class="btn btn-primary" href="{% url 'show_questions' %}" role="button">Обратно</a>
+</div>
+
+{% else %}
+
+<center><h3>Здесь вам нельзя находиться.</h3></center>
+
+{% endif %}
+
+{% endblock %}

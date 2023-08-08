@@ -1,0 +1,81 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+{% if success_message %}
+<h1>
+    <div class="text-bg-success p-3">
+        <center>Вопрос создан.</center>
+    </div>
+</h1>
+{% endif %}
+
+{% if not questions %}
+<h2>Вопросы отсутствуют...</h2>
+<br>
+{% endif %}
+
+{% for question in pages %}
+
+<div class="card" style="width: auto;">
+    <div class="card-header">
+        <p class="text-info-emphasis">Тема вопроса: {{question.title}} //</p>
+        <hr>
+        <p class="text-info-emphasis">Дата и время обновления: {{question.date_updated|date:"d-m-Y H:i:s"}} //</p>
+        <hr>
+        <p class="text-info-emphasis">Автор вопроса: {{question.author}}</p>
+        <hr>
+        <center>
+            <p class="text-danger-emphasis">Количество "Likes": {{ question.total_likes }}</p>
+        </center>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            {{question.content|linebreaks|truncatewords:30}}
+
+            <hr>
+
+            <div class="hstack gap-3">
+
+                <div class="p-2">
+                    <form action="{{ question.get_absolute_url }}" method="get">
+                        <input type="hidden" name="question-id" value="{{ question.id }}">
+                        <button type="submit" class="btn btn-primary">Прочитать</button>
+                    </form>
+                </div>
+
+                {% if user.is_authenticated %}
+                {% if user.id == question.author.id %}
+                <div class="vr"></div>
+                <div class="p-2">
+                    <a href="{% url 'edit_question' question.slug question.pk %}" class="btn btn-success"
+                        role="button">Редактировать // удалить</a>
+                </div>
+                {% endif %}
+                {% endif %}
+
+            </div>
+
+        </li>
+    </ul>
+</div>
+<hr>
+{% endfor %}
+
+{% if user.is_authenticated %}
+
+{% include 'includes/add_question.html' %}
+
+{% else %}
+
+<hr>
+Если есть желание задать вопрос или поставить (like) требуется авторизоваться:
+<p class="link-read-post"><a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">Авторизоваться</a>
+</p>
+{% endif %}
+
+<hr>
+
+{% include 'includes/show_pages.html' %}
+
+{% endblock %}

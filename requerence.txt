@@ -1,0 +1,8 @@
+django
+pillow
+python-slugify
+django-hitcount
+folium
+django-tinymce
+six
+python-dotenv

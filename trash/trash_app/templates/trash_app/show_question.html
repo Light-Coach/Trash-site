@@ -1,0 +1,135 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+<div class="list-group">
+    <div class="list-group-item">
+        <p>Тема вопроса: {{ question.title }}</p>
+        <hr>
+        <p>Автор: {{ question.author }}</p>
+        <hr>
+        <p>Содержание вопроса:</p>
+        {{ question.content|linebreaks }}
+    </div>
+
+    {% if user.is_authenticated %}
+    {% include 'includes/like_question.html' %}
+    {% endif %}
+
+    <hr>
+
+    {% if not question.answers.all %}
+    <p>Ответы отсутствуют...</p>
+
+    {% if user.is_authenticated %}
+
+    {% include 'includes/add_answer.html' %}
+
+    {% else %}
+    <hr>
+    Если есть желание ответить на вопрос или на высказывание требуется авторизоваться:
+    <p class="link-read-post"><a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">Авторизоваться</a></p>
+    {% endif %}
+
+    {% else %}
+
+    {% for answers in pages_with_answers %}
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-info">
+            <strong>
+                <hr>
+                Ответ от:
+                {{ answers.author }};
+                {% if answers.time_added == answers.time_changed %}
+                {{ answers.time_added}}
+                {% else %}
+                {{ answers.time_changed }}
+                {% endif %} //
+                {% if user.is_authenticated %}
+                <a href="#formAnswer" onclick="addAnswer('{{ answers.author }}', '{{ answers.id }}')">Комментировать</a>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                {% if user.id == answers.author.id %}
+                <a href="{% url 'edit_answer' question.slug question.pk answers.pk %}" class="btn btn-success"
+                    role="button" style="float: right; position: relative; bottom: 6px;">Редактировать // удалить</a>
+                {% endif %}
+                {% endif %}
+
+            </strong>
+            <hr>
+            Содержание ответа:
+            {{ answers.text }}
+        </li>
+    </ul>
+
+    <hr>
+
+    {% for answer_on_answer in pages_with_replies %}
+    <ul class="list-group">
+        {% if answers.id == answer_on_answer.reply_id %}
+        <li class="list-group-item list-group-item-secondary">
+            <div class="reply-content">
+                <hr>
+                <strong>
+                    <div>
+                        Комментарий от: {{ answer_on_answer.author }};
+                        {% if answer_on_answer.time_added == answer_on_answer.time_changed %}
+                        {{ answer_on_answer.time_added}}
+                        {% else %}
+                        {{ answer_on_answer.time_changed }}
+                        {% endif %}
+
+                        {% if user.is_authenticated %}
+                        {% if user.id == answer_on_answer.author.id %}
+                        <a href="{% url 'edit_answer' question.slug question.pk answer_on_answer.pk %}"
+                            class="btn btn-success" role="button"
+                            style="float: right; position: relative; bottom: 6px;">Редактировать // удалить</a>
+                        {% endif %}
+                        {% endif %}
+
+                </strong>
+                <hr>
+                <p>{{ answer_on_answer.text }}</p>
+            </div>
+        </li>
+    </ul>
+    {% endif %}
+    {% endfor %}
+
+    {% endfor %}
+
+    <script>
+        function addAnswer(author, id) {
+            document.getElementById('contactreply').value = id;
+            document.getElementById('contactanswer').innerText = '${author}, '
+        }
+    </script>
+
+    <hr>
+
+    {% if user.is_authenticated %}
+
+    {% include 'includes/add_answer.html' %}
+
+    {% else %}
+    <hr>
+    Если есть желание ответить на вопрос или на высказывание требуется авторизоваться:
+    <p class="link-read-post"><a href="{% url 'login' %}?next={{ request.path }}">Авторизоваться</a></p>
+    {% endif %}
+
+    {% endif %}
+
+    <hr>
+
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-info">Страницы ответов:
+            <hr>{% include 'includes/pages_with_answers.html' %}
+        </li>
+        <hr>
+        <li class="list-group-item list-group-item-secondary">Страницы комментариев:
+            <hr>{% include 'includes/pages_with_replies.html' %}
+        </li>
+    </ul>
+
+    {% endblock %}

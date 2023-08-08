@@ -1,0 +1,41 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+<form method="post">
+
+	{% csrf_token %}
+
+	<div class="col-4">
+		{{ form.as_p }}
+	</div>
+
+	<button type="submit" class="btn btn-dark">Войти</button>
+</form>
+
+<div class="border-top pt-3 mt-2">
+
+	<ul class="list-inline">
+		<li class="list-inline-item">
+			<small class="text-muted">
+				Желаете зарегистрироваться?
+			</small>
+		</li>
+
+		<li class="list-inline-item">
+			<small class="text-muted">
+				<a class="btn btn-danger" href="{% url 'register' %}">Зарегистрироваться</a>
+			</small>
+		</li>
+
+		<li class="list-inline-item">
+			<small class="text-muted">
+				<a class="btn btn-warning" href="{% url 'password_reset' %}">Забыли пароль?</a>
+			</small>
+		</li>
+	</ul>
+</div>
+
+{% endblock %}

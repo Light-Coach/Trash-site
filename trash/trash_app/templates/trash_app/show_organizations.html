@@ -1,0 +1,33 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+{% for organization in pages %}
+
+<div class="list-group">
+    <a href="{% url 'show_organization' organization.slug %}"
+        class="list-group-item list-group-item-action list-group-item-dark">
+        <p>Название организации: {{organization.organization_name}}</p>
+        <hr>
+        {% autoescape off %}
+        <p>Об организации: {{organization.organization_description|linebreaks|truncatewords:50}}</p>
+        {% endautoescape %}
+
+        <hr>
+        <p>Специализация организации:
+            {% for material in organization.material.all %}
+            {{material}}
+            {% endfor %}
+        </p>
+    </a>
+</div>
+
+<hr>
+
+{% endfor %}
+
+<hr>
+
+{% include 'includes/show_pages.html' %}
+
+{% endblock %}

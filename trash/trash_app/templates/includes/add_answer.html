@@ -1,0 +1,21 @@
+<!-- contact form grid -->
+
+<div class="answer-reply-content">
+    <form action="{% url 'add_answer' question.slug question.id %}" method="post" id="formAnswer">
+        {% csrf_token %}
+        <input type="hidden" name="reply" id="contactreply" value="">
+        <div>
+            <label for="contactanswer">Создать ответ:</label>
+            <textarea class="form-control border" rows="5" name="text" id="contactanswer" required=""></textarea>
+        </div>
+        <hr>
+        <div class="left-button">
+            <a class="btn btn-primary" href="{% url 'show_questions' %}" role="button">Обратно</a>
+        </div>
+        <div class="right-button">
+            <button type="submit" class="btn btn-success">Ответить</button>
+        </div>
+    </form>
+</div>
+
+<!--  //contact form grid ends here -->

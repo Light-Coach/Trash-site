@@ -1,0 +1,25 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+<div class="content-section">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+            {{ form.as_p }}
+
+        <button type="submit" class="btn btn-dark">Регистрация</button>
+
+        <div style="float: right;">
+            Уже есть аккаунт? <a class="btn btn-success" href="{% url 'login' %}">Войти</a>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

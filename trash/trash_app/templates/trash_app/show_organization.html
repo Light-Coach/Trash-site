@@ -1,0 +1,21 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+<ul class="list-group">
+    <li class="list-group-item">Название организации: {{organization.organization_name}}</li>
+    <li class="list-group-item">Адрес/а организации: {{organization.address}}</li>
+    <li class="list-group-item">Телефон для связи: {{organization.telephone_number}}</li>
+    {% autoescape off %}
+    <li class="list-group-item">Описание организации:{{organization.organization_description}}</li>
+    {% endautoescape %}
+
+</ul>
+
+<hr>
+
+<div class="left-button">
+    <a class="btn btn-primary" href="{% url 'show_organizations' %}" role="button">Обратно</a>
+</div>
+
+{% endblock %}

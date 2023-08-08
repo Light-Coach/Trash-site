@@ -1,0 +1,171 @@
+{% load static %}
+{% load trash_app_tags %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ title }}</title>
+    <!-- bootstrap -->
+    <link href="{% static 'trash_app/css/bootstrap.css' %}" rel="stylesheet" />
+    <script src="{% static 'trash_app/js/bootstrap.bundle.js' %}"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="{% static 'trash_app/images/main.jpeg' %}" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Leafletjs.com/download -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+</head>
+
+<body>
+    <table class="table table-dark" border=0 cellpadding="0" cellspacing="0">
+        <tr>
+            <td valign=top>
+                <!-- {% block header %} -->
+                <div class="container-header-menu-1">
+                    <ul class="list-inline">
+                        <li class="list-inline-item-logo">
+                            <a href="{% url 'from_start' %}">
+                                <div class="logo"></div>
+                            </a>
+                        </li>
+
+                        <div class="container-header-menu-2">
+                            {% if request.user.is_superuser %}
+                            <li class="list-inline-item">
+                                <div class="container-fluid">
+                                    <a class="btn btn-secondary" href="{% url 'newsletter' %}">Новостная рассылка</a>
+                                </div>
+                            </li>
+                            {% endif %}
+                            {% for element in menu.header_menu %}
+                            <li class="list-inline-item">
+                                <div class="container-fluid">
+                                    <a class="btn btn-secondary" href="{% url element.url_name %}">{{ element.title }}</a>
+                                </div>
+                            </li>
+                            {% endfor %}
+                            {% if request.user.is_authenticated %}
+                            <li class="list-inline-item">
+                                {{ user.username }} | <a class="btn btn-secondary"
+                                    href="{% url 'profile' user.username %}">Редактировать</a> | <a
+                                    href="{% url 'logout' %}">Выйти</a>
+                            </li>
+                            {% else %}
+                            <li class="list-inline-item">
+                                <a class="btn btn-secondary" href="{% url 'register' %}">Регистрация</a> | <a
+                                    href="{% url 'login' %}?next={{ request.path }}">Войти</a>
+                            </li>
+                            {% endif %}
+                            <li class="list-inline-item">
+                                <nav class="navbar bg-body-dark">
+                                    <div class="container-fluid">
+                                        <form class="d-flex" role="search" method="post"
+                                            action="{% url 'search_field_result' %}">
+                                            {% csrf_token %}
+                                            <input class="form-control me-2" type="search" placeholder="Поиск по сайту"
+                                                aria-label="Поиск" name="searching">
+                                            <button class="btn btn-outline-danger" type="submit">Поиск</button>
+                                        </form>
+                                    </div>
+                                </nav>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+
+                <!-- {% endblock header %} -->
+
+                <table class="table table-hover" border=0 cellpadding="0" cellspacing="0">
+                    <tr>
+                        <!-- Sidebar слева -->
+                        <td valign="top" class="left-chapters">
+
+                            <div class="list-group">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Материалы
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        {% for material in menu.materials %}
+                                        <li><a class="dropdown-item" href="{% url 'material_on_the_map' material.pk %}">
+                                                {{ material.name }}</a>
+                                        </li>
+                                        {% endfor %}
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="{% url 'materials_on_the_map' %}">Все виды
+                                                сырья</a></li>
+                                    </ul>
+                                </div>
+
+                                {% if map %}
+                                <hr>
+                                <div class="list-group">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
+                                            aria-expanded="false">Организации
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            {% for organization in menu.organizations %}
+                                            <li><a class="dropdown-item" href="{% url 'organization_on_the_map' organization.pk %}">
+                                                    {{ organization.organization_name }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                <hr>
+                                {% for element in menu.sidebar_menu %}
+                                {% url element.url_name as url %}
+                                <a class="list-group-item list-group-item-action {% if url == request.path %} active {% endif %}"
+                                    aria-current="true" href="{{ url }}">{{ element.title }}</a></li>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <!-- Конец Sidebar'а -->
+                        <td valign="top" class="content">
+                            <!-- Хлебные крошки -->
+                            {% block breadcrumbs %}
+                            {% endblock %}
+
+                            <!-- Блок контента -->
+                            <div class="container-fluid">
+                                {% include 'includes/messaging.html' %}
+                                {% block content %}
+                                {% endblock %}
+                            </div>
+                            <!-- Конец блока контента -->
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+            <td valign=top>
+                <div id="footer">
+                    <p>
+                    <div class="background-image"></div>
+                    </p>
+                    <p>{% include 'includes/footer.html' %}</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <!-- Конец footer'а и страницы -->
+</body>
+
+</html>

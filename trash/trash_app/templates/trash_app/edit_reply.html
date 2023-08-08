@@ -1,0 +1,82 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+{% if success_message_of_update %}
+<h1>
+	<div class="text-bg-info p-3"><center>Комментарий обновлён.</center></div>
+</h1>
+{% endif %}
+
+<table class="table table-bordered">
+	<thead>
+		<tr class="table-active">
+			<th scope="col">Редактирование // удаление комментария</th>
+			<th scope="col">Дата создания</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{ reply.text }}</td>
+			<td>{{ reply.time_changed }}</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#deleteReply" style="float: right;">
+	Удалить
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteReply" tabindex="-1" aria-labelledby="deleteReplyLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteReplyLabel">Удаляем?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+				<a href="{% url 'delete_reply' question.slug question.pk reply.id %}" role="button"
+					class="btn btn-dark">Удалить</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editReply"
+	style="float: right; position: relative; right: 5px;">
+	Редактировать
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editReply" tabindex="-1" aria-labelledby="editReplyLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="editReplyLabel">Редактирование</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<form id="edit_reply" method="post">
+					{% csrf_token %}
+
+					{{ form.as_p }}
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+				<button form="edit_reply" type="submit" class="btn btn-success">Сохранить изменения</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

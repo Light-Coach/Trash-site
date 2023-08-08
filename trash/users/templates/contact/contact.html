@@ -1,0 +1,60 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+{% if success_message %}
+
+<h4 class="fst-italic">
+	<center><strong>Сообщение отправлено</strong></center>
+</h4>
+
+{% else %}
+<h4 class="fst-italic">
+	<center>Спрашивайте и вам ответят.</center>
+</h4>
+
+<div class="one">
+	<div class="two">
+
+		<form action="" method="post" id="feedback_form">
+
+			{% csrf_token %}
+
+			{% if request.user.is_authenticated %}
+
+			{{ form.message }}
+			<br>
+			<!-- Заполняются автоматически -->
+			{{ form.name }}
+			{{ form.email }}
+			<!-- Заполняются автоматически -->
+			<div class="three">
+				{{ form.captcha }}
+			</div>
+
+			{% else %}
+
+			{{ form.message }}
+			<br>
+			{{ form.name }}
+			<br>
+			{{ form.email }}
+			<br>
+			<div class="three">
+				{{ form.captcha }}
+			</div>
+			{% endif %}
+		</form>
+
+		<br>
+
+		<div class="d-grid gap-2 col-6 mx-auto">
+			<button form="feedback_form" type="submit" class="btn btn-dark mb-3">Отправить сообщение</button>
+		</div>
+
+	</div>
+</div>
+
+{% endif %}
+
+{% endblock %}

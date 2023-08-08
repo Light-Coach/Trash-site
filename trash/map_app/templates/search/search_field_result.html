@@ -1,0 +1,52 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+<center>
+	{% if searching %}
+	<h3>Вы искали: {{searching}}</h3>
+	<br>
+	{% for organization in searched_organizations %}
+	<div class="list-group">
+		<a href="{% url 'show_organization' organization.slug %}"
+			class="list-group-item list-group-item-action list-group-item-dark">
+			<p>Название организации: {{organization.organization_name}}</p>
+			<p>Специализация организации:
+				{% for material in organization.material.all %}
+				{{ material }}
+				{% endfor %}
+			</p>
+		</a>
+	</div>
+	{% endfor %}
+	<br>
+	{% for article in searched_articles %}
+	<div class="list-group">
+		<a href="{% url 'show_article' article.slug %}"
+			class="list-group-item list-group-item-action list-group-item-dark">
+			<p>Название статьи: {{ article.title }}</p>
+			<p>Дата создания: {{ article.release_date|date:"d-m-Y" }}</p>
+			<p>{{ article.description|linebreaks|truncatewords:50 }}</p>
+		</a>
+	</div>
+	{% endfor %}
+	<br>
+	{% for question in searched_questions %}
+	<div class="list-group">
+		<a href="{% url 'question_detailed' question.slug question.pk %}"
+			class="list-group-item list-group-item-action list-group-item-dark">
+			<p>Тема вопроса: {{ question.title }}</p>
+			<hr>
+			<p>Автор: {{ question.author }}</p>
+			<hr>
+			<p>Содержание вопроса:</p>
+			{{ question.content|linebreaks }}
+		</a>
+	</div>
+	{% endfor %}
+	{% else %}
+	<h3>Ничего найдено, лол.</h3>
+	{% endif %}
+</center>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+{% if success_message_of_update %}
+{% if answer.reply_id != NULL %}
+<h1>
+	<div class="text-bg-info p-3"><center>Комментарий обновлён.</center></div>
+</h1>
+{% else %}
+<h1>
+	<div class="text-bg-info p-3"><center>Ответ обновлён.</center></div>
+</h1>
+{% endif %}
+{% endif %}
+
+<table class="table table-bordered">
+	<thead>
+		<tr class="table-active">
+			<th scope="col">Редактирование // удаление ответа</th>
+			<th scope="col">Дата создания</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{ answer.text }}</td>
+			<td>{{ answer.time_changed }}</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#deleteAnswer" style="float: right;">
+	Удалить
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteAnswer" tabindex="-1" aria-labelledby="deleteAnswerLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteAnswerLabel">Удаляем?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+				<a href="{% url 'delete_answer' question.slug question.pk answer.pk %}" role="button"
+					class="btn btn-dark">Удалить</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editAnswer"
+	style="float: right; position: relative; right: 5px;">
+	Редактировать
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editAnswer" tabindex="-1" aria-labelledby="editAnswerLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="editAnswerLabel">Редактирование</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<form id="edit_answer" method="post">
+					{% csrf_token %}
+
+					{{ form.as_p }}
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+				<button form="edit_answer" type="submit" class="btn btn-success">Сохранить изменения</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="left-button">
+	<a class="btn btn-primary" href="{% url 'question_detailed' question.slug question.pk %}" role="button">Обратно</a>
+</div>
+
+{% else %}
+
+<center><h3>Здесь вам нельзя находиться.</h3></center>
+
+{% endif %}
+
+{% endblock %}

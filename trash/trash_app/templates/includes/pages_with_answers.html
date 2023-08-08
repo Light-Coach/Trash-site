@@ -1,0 +1,29 @@
+{% if is_paginated1 %}
+<div class="answer-paginating-block">
+    <nav aria-label="...">
+        <ul class="pagination">
+
+            <li class="page-item {% if not previous_url1 %} disabled {% endif %}">
+                <a class="page-link" href="{{ previous_url1 }}">Предыдущая</a>
+            </li>
+
+            {% for number in pages_with_answers.paginator.page_range %}
+            {% if pages_with_answers.number == number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?pages_with_answers={{ number }}">{{ number }}</a>
+            </li>
+            {% elif number > pages_with_answers.number|add:-3 and number < pages_with_answers.number|add:3 %} <li
+                class="page-item">
+                <a class="page-link" href="?pages_with_answers={{ number }}">{{ number }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                <li class="page-item {% if not next_url1 %} disabled {% endif %}">
+                    <a class="page-link" href="{{ next_url1 }}">Следующая</a>
+                </li>
+
+        </ul>
+    </nav>
+</div>
+{% endif %}

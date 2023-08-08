@@ -1,0 +1,16 @@
+{% extends "trash_app/base.html" %}
+
+{% block content %}
+
+<div class="content-section">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.media }}
+        <div class="form-group">
+            <button class="btn btn-danger">Разослать письма</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

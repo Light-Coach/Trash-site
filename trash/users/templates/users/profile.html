@@ -1,0 +1,32 @@
+{% extends 'trash_app/base.html' %}
+
+{% block content %}
+
+<div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style" style="min-height:65vh;">
+    <legend class="border-bottom mb-4">{{ title }}:</legend>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="media">
+            <div class="media-body">
+                <h2 class="account-heading">{{ user.username }}
+                    <small class="text-muted">({{ user.status }})</small>
+                </h2>
+                <p class="text-secondary">{{ user.email }}</p>
+            </div>
+        </div>
+
+        {% if user.username == form.instance.username %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Изменить данные:</legend>
+
+            {{ form.as_p }}
+
+        </fieldset>
+
+        <button type="submit" class="btn btn-dark">Обновить информацию профиля</button>
+        <a href="{% url 'password_change' %}" class="btn btn-danger" style="float: right;">Изменить пароль?</a>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}
