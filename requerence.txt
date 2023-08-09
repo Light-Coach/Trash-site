@@ -6,3 +6,5 @@ folium
 django-tinymce
 six
 python-dotenv
+django-simple-captcha
+django-debug-toolbar

@@ -1,6 +1,6 @@
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.core.paginator import Paginator
 from slugify import slugify
 

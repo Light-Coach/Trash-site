@@ -1,11 +1,9 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.shortcuts import render
 from django.db.models import Q
 from django.contrib import messages
 import requests
-import polyline
 import folium
-from folium.plugins import MarkerCluster, MousePosition, MeasureControl
+from folium.plugins import MarkerCluster, MousePosition
 
 from trash_app.models import *
 from trash_app.utils import ContextDataMenu

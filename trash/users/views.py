@@ -1,5 +1,3 @@
-from typing import Any, Dict, Optional
-from django.db import models
 from django.db.models.query_utils import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
@@ -256,7 +254,10 @@ def custom_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"А, вы пришли.")
-                return redirect(request.GET.get("next"))
+                if request.GET.get("next") == None:
+                    return redirect("from_start")
+                else:
+                    return redirect(request.GET.get("next"))
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
